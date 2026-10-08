@@ -1,0 +1,7 @@
+Flask>=3.0
+mysql-connector-python
+PyMuPDF
+pytesseract
+Pillow
+requests
+python-dotenv

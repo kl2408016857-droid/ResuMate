@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% block title %}Admin{% endblock %}
+{% block body %}<h1>Panel admin</h1>
+<div class="stats"><div class="panel"><b>{{ stats.students }}</b><span>Pelajar berdaftar</span></div>
+<div class="panel"><b>{{ stats.runs }}</b><span>Analisis dibuat</span></div>
+<div class="panel"><b>{{ stats.avg_score }}</b><span>Purata skor</span></div></div>
+<div class="panel"><h2>Taburan skor</h2><div class="hist">
+{% set mx = ([stats.bands|max, 1])|max %}{% for n in stats.bands %}<div><i style="height:{{ (n / mx * 100)|round }}%"></i><small>{{ n }}</small><span>{{ ['0-19','20-39','40-59','60-79','80-100'][loop.index0] }}</span></div>{% endfor %}</div></div>
+<div class="panel"><h2>Tambah sumber pembelajaran</h2><form method="post"><input type="hidden" name="csrf" value="{{ csrf }}"><div class="grid">
+<div><label for="k">Jenis</label><select id="k" name="kind"><option>course</option><option>certification</option><option>article</option></select>
+<label for="t">Tajuk</label><input id="t" name="title" required></div>
+<div><label for="s">Kemahiran berkaitan</label><input id="s" name="skill" placeholder="cth. SQL" required>
+<label for="u">Pautan</label><input id="u" name="url" type="url" required></div></div>
+<button class="btn" type="submit">Simpan sumber</button></form></div>
+<h2>Sumber ({{ resources|length }})</h2><div class="panel wrap"><table><tr><th>Tajuk</th><th>Kemahiran</th><th>Jenis</th><th></th></tr>
+{% for x in resources %}<tr><td><a href="{{ x.url }}">{{ x.title }}</a></td><td>{{ x.skill }}</td><td>{{ x.kind }}</td>
+<td><form method="post" action="{{ url_for('admin_delete', kind='resource', rid=x.id) }}"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn ghost sm">Padam</button></form></td></tr>{% endfor %}</table></div>
+<h2>Pengguna ({{ users|length }})</h2><div class="panel wrap"><table><tr><th>Nama</th><th>Emel</th><th>Peranan</th><th></th></tr>
+{% for u in users %}<tr><td>{{ u.name }}</td><td>{{ u.email }}</td><td>{{ u.role }}</td>
+<td>{% if u.role=='student' %}<form method="post" action="{{ url_for('admin_delete', kind='user', rid=u.id) }}"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="btn ghost sm">Padam</button></form>{% endif %}</td></tr>{% endfor %}</table></div>
+<h2>Analisis terkini</h2><div class="panel wrap"><table><tr><th>Pelajar</th><th>Jawatan</th><th>Skor</th><th></th></tr>
+{% for r in runs %}<tr><td>{{ r.name }}</td><td>{{ r.target_role }}</td><td>{{ r.score }}</td><td><a href="{{ url_for('result', aid=r.id) }}">Lihat</a></td></tr>{% endfor %}</table></div>{% endblock %}

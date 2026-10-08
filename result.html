@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% block title %}Keputusan analisis{% endblock %}
+{% set lbl = 'Cemerlang' if a.score>=80 else 'Baik' if a.score>=60 else 'Sederhana' if a.score>=40 else 'Perlu banyak penambahbaikan' %}
+{% block body %}
+<div class="panel hero"><div class="dial" style="--p:{{ a.score }}" role="img" aria-label="Skor {{ a.score }} daripada 100"><span>{{ a.score }}</span></div>
+<div><span class="chip">{{ lbl }}</span><h1>Resume untuk {{ a.target_role }}</h1><p>{{ r.summary }}</p>
+<p class="muted small">{{ a.filename }} &middot; {{ a.created_at.strftime('%d %b %Y, %I:%M %p') }}</p></div></div>
+<div class="grid">
+<div class="panel"><h2>Kekuatan</h2><ul class="plain good">{% for s in r.strengths %}<li>{{ s }}</li>{% endfor %}</ul></div>
+<div class="panel"><h2>Perlu diperbaiki</h2><ul class="plain warn">{% for s in r.weaknesses %}<li>{{ s }}</li>{% endfor %}</ul></div>
+<div class="panel"><h2>Kemahiran dikesan</h2><ul class="tags have">{% for s in r.skills_found %}<li>{{ s }}</li>{% endfor %}</ul></div>
+<div class="panel"><h2>Kemahiran yang kurang</h2><ul class="tags miss">{% for s in r.missing_skills %}<li>{{ s }}</li>{% endfor %}</ul></div></div>
+<div class="panel"><h2>Laluan kerjaya sesuai</h2>{% for c in r.careers %}<div class="career"><div><span>{{ c.title }}</span><span>{{ c.match }}%</span></div>
+<div class="bar"><b style="width:{{ c.match }}%"></b></div><p class="muted">{{ c.reason }}</p></div>{% endfor %}</div>
+<div class="panel"><h2>Cadangan pembelajaran</h2><ul class="plain">{% for l in r.learning %}<li><strong>{{ l.title }}</strong> <span class="chip">{{ l.type }}</span><br><span class="muted">{{ l.why }}</span></li>{% endfor %}</ul>
+{% if res %}<h3>Sumber pilihan admin</h3><ul class="plain">{% for x in res %}<li><a href="{{ x.url }}" target="_blank" rel="noopener">{{ x.title }}</a> <span class="chip">{{ x.kind }}</span></li>{% endfor %}</ul>{% endif %}</div>
+<div class="noprint"><a class="btn ghost" href="{{ url_for('dashboard') if session.role!='admin' else url_for('admin') }}">Kembali</a> <button class="btn" onclick="window.print()">Simpan sebagai PDF</button></div>{% endblock %}

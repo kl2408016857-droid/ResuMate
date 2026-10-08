@@ -1,0 +1,29 @@
+{% extends "base.html" %}{% block title %}Resume saya{% endblock %}
+{% block body %}<h1>Hai, {{ session.name.split(' ')[0] }}</h1>
+<p class="muted lead">Muat naik resume anda dan pilih jawatan yang anda sasarkan.</p>
+<div class="panel"><form id="f" method="post" action="{{ url_for('analyse_route') }}" enctype="multipart/form-data"><input type="hidden" name="csrf" value="{{ csrf }}">
+<div class="grid"><div><label for="r">Resume (PDF, maks 5 MB)</label><input id="r" type="file" name="resume" accept=".pdf" required></div>
+<div><label for="role">Jawatan sasaran</label><input id="role" name="role" placeholder="cth. Junior Data Analyst" required></div></div>
+<label for="l">Bahasa laporan</label><select id="l" name="lang"><option>English</option><option>Bahasa Melayu</option></select>
+<label for="jd">Job description <span class="muted">(pilihan, tampal untuk padanan yang lebih tepat)</span></label>
+<textarea id="jd" name="jd" rows="5" maxlength="4000" placeholder="Tampal keperluan jawatan daripada iklan kerja di sini..."></textarea>
+<button class="btn" type="submit">Analisis resume</button></form></div>
+{% if rows %}<div class="stats"><div class="panel"><b>{{ stats.n }}</b><span>Analisis dibuat</span></div>
+<div class="panel"><b>{{ stats.best }}</b><span>Skor terbaik</span></div><div class="panel"><b>{{ stats.avg }}</b><span>Purata skor</span></div></div>
+{% if pts %}<div class="panel"><h2>Perkembangan skor</h2>
+<svg viewBox="0 0 300 70" class="spark" role="img" aria-label="Graf perkembangan skor"><polyline points="{{ pts }}" fill="none" stroke="var(--blue)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/></svg>
+<p class="muted">Sehingga 10 analisis terakhir, daripada yang paling lama ke terkini.</p></div>{% endif %}{% endif %}
+<h2>Sejarah analisis</h2><div class="panel wrap">
+{% if rows %}<table><tr><th>Fail</th><th>Jawatan sasaran</th><th>Skor</th><th>Tarikh</th><th></th></tr>
+{% for r in rows %}<tr><td>{{ r.filename }}</td><td>{{ r.target_role }}</td><td><b>{{ r.score }}</b>/100</td><td>{{ r.created_at.strftime('%d %b %Y') }}</td>
+<td class="act"><a href="{{ url_for('result', aid=r.id) }}">Lihat</a>
+<form method="post" action="{{ url_for('delete_analysis', aid=r.id) }}" onsubmit="return confirm('Padam analisis ini?')"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="linkbtn">Padam</button></form></td></tr>{% endfor %}</table>
+{% else %}<p class="muted">Belum ada analisis. Muat naik resume pertama anda di atas.</p>{% endif %}</div>
+<div id="busy" class="busy" hidden><div class="spin"></div><p id="msg">Membaca resume anda...</p><small>Ini ambil 10 hingga 30 saat. Jangan tutup halaman.</small></div>
+<script>
+document.getElementById('f').addEventListener('submit',function(){
+ document.getElementById('busy').hidden=false;
+ var m=['Membaca resume anda...','Mengenal pasti kemahiran...','Membandingkan dengan jawatan sasaran...','Menyusun cadangan...'],i=0;
+ setInterval(function(){i=Math.min(i+1,m.length-1);document.getElementById('msg').textContent=m[i]},6000);
+});
+</script>{% endblock %}

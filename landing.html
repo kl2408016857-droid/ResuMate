@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block title %}ResuMate: semak resume dengan AI{% endblock %}
+{% block body %}
+<section class="hero land"><div><h1>Resume anda, dibaca seperti pengambil pekerja.</h1>
+<p>Muat naik PDF, pilih jawatan yang anda mahu, dan dapat skor, kemahiran yang kurang serta cadangan kerjaya dalam beberapa saat.</p>
+<a class="btn" href="{{ url_for('register') }}">Cuba resume saya</a> <a class="btn ghost" href="{{ url_for('login') }}">Log masuk</a></div>
+<div class="panel sample" aria-hidden="true"><small class="muted">Contoh laporan</small><div class="hero"><div class="dial sm" style="--p:78"><span>78</span></div>
+<div><span class="chip">Baik</span><ul class="tags have"><li>Python</li><li>SQL</li></ul><ul class="tags miss"><li>Docker</li><li>Git</li></ul></div></div></div></section>
+<section class="steps"><div class="panel"><span class="n">1</span><h3>Muat naik</h3><p class="muted">PDF biasa atau imbasan. Tulisan dalam imej dibaca dengan OCR.</p></div>
+<div class="panel"><span class="n">2</span><h3>Dapat analisis</h3><p class="muted">Skor 0-100, kekuatan, kelemahan dan kemahiran yang belum ada untuk jawatan sasaran.</p></div>
+<div class="panel"><span class="n">3</span><h3>Tambah baik</h3><p class="muted">Kursus, sijil dan laluan kerjaya yang sesuai dengan latar belakang anda.</p></div></section>{% endblock %}
